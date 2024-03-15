@@ -14,7 +14,7 @@ Crear un API para manejar registro de horas pagadas a empleados, debe contener l
 
 Para lograr esto crearemos 2 tipos: `Employee` y `WorkedHour`
 
-```http
+```bash
   Tipo Employee
 ```
 
@@ -27,8 +27,6 @@ Para lograr esto crearemos 2 tipos: `Employee` y `WorkedHour`
 
 ```bash
 Tipo WorkedHour:
-employeeId: string
-hours: int
 ```
 
 | Parameter    | Type     |
