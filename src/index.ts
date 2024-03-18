@@ -12,7 +12,7 @@ type Employee = {
 }
 
 type WorkedHour = {
-    employeeId: string,
+    employeeId: number,
     hours: number,
 }
 
@@ -61,7 +61,7 @@ app.get('/employee/:id/hours', (req: Request, res: Response) =>{
         })
     }
     
-    const existsHours = workedHours.filter((workedHour)=> workedHour.employeeId === id )
+    const existsHours = workedHours.filter((workedHour)=> workedHour.employeeId === Number(id) )
     const existsEmployee = employees.find((employee)=> employee.id === Number(id))
 
     if (!existsEmployee) {
@@ -95,8 +95,10 @@ app.get('/employee/:id/salary', (req: Request, res:Response) => {
     }
     
     const employee = employees.find((employee) => employee.id === Number(id));
-    const workedHour = workedHours.find((workedHour)=> workedHour.employeeId === id )
+    const workedHour = workedHours.filter((workedHour)=> workedHour.employeeId === Number(id) )
 
+    const totalHours = workedHour.reduce((total, currentHour) => total + currentHour.hours ,0);
+    
     if(!employee || !workedHour){
         return res.status(404).json({
             statusCode: 404,
@@ -104,8 +106,9 @@ app.get('/employee/:id/salary', (req: Request, res:Response) => {
             message:`Employee with the ID=${id} does not exist or The worked hour for this Employee was not registered.`
         })
     }
+    
+    const salary = totalHours * employee.pricePerHour;
 
-    const salary = employee.pricePerHour * workedHour.hours
     res.json({
         Id: employee.id,
         employee: employee.fullname,
@@ -166,7 +169,6 @@ app.post('/employee/:id/hours', (req: Request, res: Response) => {
     }
 
     const existsEmployee = employees.find((employee) => employee.id == Number(id))
-    const hasHoursRegistered = workedHours.find((hour)=> hour.employeeId === id)
 
     if (!existsEmployee){
         return res.status(404).json({
@@ -176,16 +178,8 @@ app.post('/employee/:id/hours', (req: Request, res: Response) => {
         })
     }
 
-    if (hasHoursRegistered) {
-        return res.status(400).json({
-            statusCode: 400,
-            statusValue: "Bad Request",
-            message:`The Employee with ID ${id} has hours registered.`
-        })
-    }
-    
     const  hourRegistration = {
-        employeeId: id,
+        employeeId: Number(id),
         hours
     }
 
@@ -252,7 +246,7 @@ app.delete("/employee/:id", (req:Request,res:Response)=>{
     }
 
     const empIndex = employees.findIndex((employee) => employee.id === Number.parseInt(id));
-    const hoursIndex = workedHours.findIndex((hours) => hours.employeeId === id);
+    const hoursIndex = workedHours.findIndex((hours) => hours.employeeId === Number(id));
 
     if (workedHours[empIndex]){
         workedHours.splice(hoursIndex,1)
