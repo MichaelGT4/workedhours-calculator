@@ -11,6 +11,8 @@ type Employee = {
     pricePerHour: number
 }
 
+// Test De un PR
+
 type WorkedHour = {
     employeeId: number,
     hours: number,
@@ -18,7 +20,7 @@ type WorkedHour = {
 
 let idSecuence = 0
 
-let  employees:Employee[] = []
+let  employees: Employee[] = []
 let  workedHours:WorkedHour[]= []
 
 // obtener todos los empleados registrados
